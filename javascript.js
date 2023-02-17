@@ -1,79 +1,142 @@
-// function to get computer choice
+//get computer choice
 function getComputerChoice() {
-  let randNum = Math.floor(Math.random() * 3);
-  let computerChoice;
+	let rock = "Rock";
+  	let paper = "Paper";
+  	let scissors = "Scissors";
+  	let getRandomValue = Math.random();
 
-  switch (randNum) {
-    case 0:
-      computerChoice = 'rock';
-      break;
-    case 1:
-      computerChoice = 'paper';
-      break;
-    case 2:
-      computerChoice = 'scissors';
-      break;
-  }
-  console.log("Computer Choice: " + computerChoice.toUpperCase());
-  return computerChoice;
+  	if (getRandomValue <= 0.33) {
+      	return rock;
+  	} else if (getRandomValue <= 0.66) {
+      	return paper;
+  	} else {
+      	return scissors;
+  	}
 }
 
-// function to get player choice
-function getPlayerChoice() {
-  let playerInput = prompt("Rock, Paper or Scissors?");
-  let playerChoice = playerInput.toLowerCase();
-
-  console.log("Your Choice: " + playerChoice.toUpperCase())
-  return playerChoice;
-}
-
-// game logic
-function playRound(playerSelection, computerSelection) {
-  if (playerSelection === computerSelection) {
-    return "It's a Tie! Play again!";
-  } else if (playerSelection === "rock" && computerSelection === "paper") {
-      return "You lose! Paper beats Rock!";
-  } else if (playerSelection === "rock" && computerSelection === "scissors") {
-      return "You win! Rock beats Scissors!";
-  } else if (playerSelection === "paper" && computerSelection === "rock") {
-      return "You win! Paper beats Rock!";
-  } else if (playerSelection === "paper" && computerSelection === "scissors") {
-      return "You lose! Scissors beats Paper!";
-  } else if (playerSelection === "scissors" && computerSelection === "rock") {
-      return "You lose! Rock beats Scissors!";
-  } else if (playerSelection === "scissors" && computerSelection === "paper") {
-      return "You win! Scissors beats paper!";
-  } else {
-      return "Your input is Invalid. Please try again."
-  }
-}
-
-// determine winner after five rounds
+//determine winner after five rounds
 function game() {
-  let computerScore = 0;
-  let playerScore = 0;
+	let computerScore = 0;
+	let playerScore = 0;
+	let gameWinner = "";
+	let audio = new Audio("https://www.fesliyanstudios.com/play-mp3/779");
 
-  for (i = 0; i < 5; i++) {
-    const result = playRound(getPlayerChoice(), getComputerChoice());
-    console.log(result);
+	const buttons = document.querySelectorAll('img');
+	buttons.forEach((img) => {
+		img.addEventListener('click', () => {
+			playerSelection = img.className;
+			const computerSelection = getComputerChoice();
+			battleWinText.textContent = (playRound(playerSelection, computerSelection));
+			playerWinText.textContent = "Player Scores: " + playerScore;
+			computerWinText.textContent = "Computer Scores: " + computerScore;
+			audio.play();
+			endGame();
+		})
+	})
 
-    if (result.includes("win")) {
-      playerScore++;
-      console.log("Computer: " + computerScore + " | " + "You: " + playerScore);
-    } else if (result.includes("lose")) {
-      computerScore++;
-      console.log("Computer: " + computerScore + " | " + "You: " + playerScore);
-    }
-  }
+	function playRound(playerSelection, computerSelection) {
+		let tie = "It's a Tie! You both selected " + playerSelection + ".";
+		let paperBeatRock = "You Win! " + playerSelection + " Beats " + computerSelection + ".";
+		let scissorsBeatPaperLoss = "You lose! " + playerSelection + " Beats " + computerSelection + ".";
+		let paperBeatRockLoss = "You lose! " + playerSelection + " Beats " + computerSelection + ".";
+		let rockBeatScissors = "You Win! " + playerSelection + " Beats " + computerSelection + ".";
+		let rockBeatScissorsLoss = "You lose! " + playerSelection + " Beats " + computerSelection + ".";
+		let scissorsBeatPaper = "You Win! " + playerSelection + " Beats " + computerSelection + ".";
 
-  console.log("OVERALL SCORE ▸ Computer: " + computerScore + " | " + "You: " + playerScore);
+		if (playerSelection === computerSelection) {
+			return tie;
+		} else if ((playerSelection === "Paper") && (computerSelection === "Rock")) {
+			playerScore++;
+			return paperBeatRock;
+		} else if ((playerSelection === "Paper") && (computerSelection === "Scissors")) {
+			computerScore++;
+			return scissorsBeatPaperLoss;
+		} else if ((playerSelection === "Rock") && (computerSelection === "Paper")) {
+			computerScore++;
+			return paperBeatRockLoss;
+		} else if ((playerSelection === "Rock") && (computerSelection === "Scissors")) {
+			playerScore++;
+			return rockBeatScissors;
+		} else if ((playerSelection === "Scissors") && (computerSelection === "Rock")) {
+			computerScore++;
+			return rockBeatScissorsLoss;
+		} else {
+			playerScore++;
+			return scissorsBeatPaper;
+		}
+	}
 
-  if (playerScore > computerScore) {
-    console.log("GGs all around! You win the game!");
-  } else if (playerScore < computerScore) {
-      console.log("That sucks! You lose the game!");
-  } else {
-      console.log("Tie Round! Play again!");
-  }
+  	// determine who won to five points first
+  	function endGame() {
+		let audioWin = new Audio("https://www.fesliyanstudios.com/play-mp3/4251");
+		let audioLose = new Audio("https://www.fesliyanstudios.com/play-mp3/4257");
+
+		if (playerScore == 5) {
+            audioWin.play();
+			gameWinner = "You won the game!";
+		  	gameWinText.textContent = gameWinner;
+
+		  	//disable game buttons
+		  	document.getElementById("1").style.pointerEvents = "none";
+		  	document.getElementById("2").style.pointerEvents = "none";
+		  	document.getElementById("3").style.pointerEvents = "none";
+	
+		  	//create new DOM button to replay
+		  	const playAgainButton = document.createElement("button");
+		  	playAgainButton.textContent = "Play Again?";
+		  	winnersDiv.appendChild(playAgainButton);
+  
+		  	//if clicked, reload page
+		  	playAgainButton.addEventListener('click', () => { location.reload(); })
+	  	} else if (computerScore == 5) {
+            audioLose.play();
+		  	gameWinner = "The Computer Wins.";
+		  	gameWinText.textContent = gameWinner;
+
+		  	//disable game buttons
+		  	document.getElementById("1").style.pointerEvents = "none";
+		  	document.getElementById("2").style.pointerEvents = "none";
+		  	document.getElementById("3").style.pointerEvents = "none";
+	
+		  	//create new DOM button to replay
+		  	const playAgainButton = document.createElement("button");
+		  	playAgainButton.textContent = "Play Again?";
+		  	winnersDiv.appendChild(playAgainButton);
+	
+		  	//if clicked, reload page
+		  	playAgainButton.addEventListener('click', () => { location.reload() ;})
+		}   
+	}
+
+  	//create div DOM for all results
+  	const scoresHere = document.querySelector("#scoresDiv");
+  	const resultsDiv = document.createElement("div");
+  	resultsDiv.style.marginTop = "50px";
+  	scoresHere.appendChild(resultsDiv);
+  
+  	//create player win tracking DOM 
+  	const playerWinText = document.createElement("p");
+  	playerWinText.textContent = "Player Scores: " + playerScore;
+  	resultsDiv.appendChild(playerWinText);
+  
+  	//create computer win tracking DOM
+  	const computerWinText = document.createElement("p");
+  	computerWinText.textContent = "Computer Scores: " + computerScore;
+  	resultsDiv.appendChild(computerWinText);
+  
+  	//create battle win text DOM
+  	const winnersDiv = document.querySelector("#winnersDiv");
+  	const battleWinText = document.createElement("p");
+  	battleWinText.style.color = "#ffffff";
+	battleWinText.style.fontSize = "18px";
+  	winnersDiv.appendChild(battleWinText);
+      
+  	//create game win text DOM
+  	const gameWinText = document.createElement("p");
+  	gameWinText.style.color = "#ffa500";
+	gameWinText.style.fontSize = "25px";
+	gameWinText.style.marginTop = "40px";
+  	gameWinText.textContent = gameWinner;
+  	winnersDiv.appendChild(gameWinText);
 }
 game();

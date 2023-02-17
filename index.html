@@ -4,12 +4,30 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rock Paper Scissors</title>
+    <title>Rock, Paper, Scissors</title>
 
-    <script type="text/javascript" src="../odin-rock-paper-scissors/javascript.js"></script>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="../odin-rock-paper-scissors/images/rps-favicon.png" type="image/x-icon" />
+    <link rel="icon" href="../odin-rock-paper-scissors/images/rps-favicon.png" type="image/x-icon" />
+
+    <script type="text/javascript" src="../odin-rock-paper-scissors/javascript.js" defer></script>
     <link rel="stylesheet" href="../odin-rock-paper-scissors/style.css" />
 </head>
 <body>
+    <div id="header">
+        <h1 class="header-title">ROCK, PAPER, SCISSORS</h1>
 
+        <h3>First to win 5 points</h3>
+        <h3>Choose Your Weapon</h3>
+    </div>
+    <div id="container">
+        <div class="containerIcons">
+            <img src="../odin-rock-paper-scissors/images/icon-rock.png" alt="Rock" class="Rock" id="1" />
+            <img src="../odin-rock-paper-scissors/images/icon-paper.png" alt="Paper" class="Paper" id="2" />
+            <img src="../odin-rock-paper-scissors/images/icon-scissors.png" alt="Scissors" class="Scissors" id="3" />
+        </div>
+    </div>
+    <div id="scoresDiv"></div>
+    <div id="winnersDiv"></div>
 </body>
 </html>
